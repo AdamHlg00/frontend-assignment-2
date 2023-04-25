@@ -9,7 +9,9 @@ export default function App() {
   const s = useStates('main', {
     movies: [],
     screenings: [],
-    sorting: 'dateAscending'
+    sorting: 'dateAscending',
+    categories: [],
+    filterCategory: 'Adventure'
   })
 
   useEffect(() => {
@@ -24,13 +26,17 @@ export default function App() {
       let screenings = await (await fetch('/api/screenings')).json()
       console.log(screenings)
       s.screenings = screenings
+
+      let categories = await (await fetch('/api/categories')).json()
+      console.log(categories)
+      s.categories = categories
     })()
   }, [])
 
   return s.movies.length === 0 ? null : <>
     <Routes>
-      <Route path="/" element={<MovieList />}></Route>
-      <Route path="/movie-detail/:slug" element={<MovieDetail />} />
+      <Route path='/' element={<MovieList />}></Route>
+      <Route path='/movie-detail/:slug' element={<MovieDetail />} />
     </Routes>
   </>
 }

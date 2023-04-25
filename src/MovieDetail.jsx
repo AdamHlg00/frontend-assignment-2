@@ -9,7 +9,7 @@ export default function () {
   const { title, description } = s.movies.find(movie => movie.slug == slug)
   const { length, categories, posterImage } = description
 
-  return <div className="movie-detail">
+  return <div className='movie-detail'>
     <h3>{title}</h3>
     <h4>Length: {length} minutes</h4>
     <h4>Categories: {categories.join(', ')}</h4>
