@@ -9,7 +9,7 @@ export default function App() {
   const s = useStates('main', {
     movies: [],
     screenings: [],
-    sorting: 'Date (Ascending)'
+    sorting: 'dateAscending'
   })
 
   useEffect(() => {
