@@ -2,17 +2,17 @@ import { useParams } from 'react-router-dom'
 import { useStates } from './utilities/states'
 
 export default function () {
-  const { slug } = useParams()
+  const { id } = useParams()
 
   const s = useStates('main')
 
-  const { title, description } = s.movies.find(movie => movie.slug == slug)
-  const { length, categories, posterImage } = description
+  console.log('proxy', s.movies.title)
+  const { time, movieId, auditoriumId } = s.screenings.find(screening => screening.id == id)
+  //const { length, categories, posterImage } = description
 
-  return <div className='movie-detail'>
-    <h3>{title}</h3>
-    <h4>Length: {length} minutes</h4>
-    <h4>Categories: {categories.join(', ')}</h4>
-    <img src={'https://cinema-rest.nodehill.se' + posterImage} />
+  return <div className="movie-detail">
+    <h3>{time}</h3>
+    <h4>Movie: {movieId}</h4>
+    <h4>Auditorium: {auditoriumId}</h4>
   </div>
 }

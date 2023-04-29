@@ -36,7 +36,7 @@ export default function App() {
   return s.movies.length === 0 ? null : <>
     <Routes>
       <Route path='/' element={<MovieList />}></Route>
-      <Route path='/movie-detail/:slug' element={<MovieDetail />} />
+      <Route path='/book-seats/:id' element={<MovieDetail />} />
     </Routes>
   </>
 }

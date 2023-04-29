@@ -25,14 +25,11 @@ export default function MovieList() {
     s.filterCategory = event.target.value
   }
 
-  console.log(s.filterCategory)
-
   const filteredMovies = s.movies.filter(movie => movie.description.categories.includes(s.filterCategory))
-  console.log('MOVIES', filteredMovies)
+
   const filteredMovieIds = filteredMovies.map(movie => movie.id)
-  console.log('ID', filteredMovieIds)
+
   const filteredScreenings = sortedScreenings.filter(screening => filteredMovieIds.includes(screening.movieId))
-  console.log('tef', filteredScreenings)
 
   return <>
     <div>
@@ -52,36 +49,29 @@ export default function MovieList() {
       </label>
     </div>
 
-    {/*s.movies.map(({ slug, title, description }) => <Link
-      to={'/movie-detail/' + slug}>
-      <div className="movie">
-        <h3>{title}</h3>
-        <img src={'https://cinema-rest.nodehill.se' + description.posterImage} />
-      </div>
-    </Link>
-)*/}
-
-    {filteredScreenings.map(({ id, time, movieId }) => {
+    {filteredScreenings.map(({ id, time, movieId, slug }) => {
       const movie = s.movies.find(({ id }) => id === movieId)
       return (
-        <div className='screening' key={id}>
-          <h1>{new Intl.DateTimeFormat('sv-SE', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric'
-          }).format(new Date(time))}</h1>
-          {movie && (
-            <div className='movie'>
-              <h2>{movie.title}</h2>
-              <h3>{Math.floor(movie.description.length / 60)} hours {movie.description.length % 60} minutes</h3>
+        <Link to={'/book-seats/' + id}>
+          <div className='screening' key={id}>
+            <h1>{new Intl.DateTimeFormat('sv-SE', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric'
+            }).format(new Date(time))}</h1>
+            {movie && (
+              <div className='movie'>
+                <h2>{movie.title}</h2>
+                <h3>{Math.floor(movie.description.length / 60)} hours {movie.description.length % 60} minutes</h3>
 
-              <img src={`https://cinema-rest.nodehill.se${movie.description.posterImage}`} />
-            </div>
-          )}
-        </div>
+                <img src={`https://cinema-rest.nodehill.se${movie.description.posterImage}`} />
+              </div>
+            )}
+          </div>
+        </Link>
       )
     })}
   </>
