@@ -11,24 +11,21 @@ export default function App() {
     screenings: [],
     sorting: 'dateAscending',
     categories: [],
-    filterCategory: 'Adventure'
+    filterCategory: 'All'
   })
 
   useEffect(() => {
     (async () => {
       let movies = await (await fetch('/api/movies')).json()
-      console.log(movies)
       for (let movie of movies) {
         movie.slug = kebabify(movie.title)
       }
       s.movies = movies
 
       let screenings = await (await fetch('/api/screenings')).json()
-      console.log(screenings)
       s.screenings = screenings
 
       let categories = await (await fetch('/api/categories')).json()
-      console.log(categories)
       s.categories = categories
     })()
   }, [])

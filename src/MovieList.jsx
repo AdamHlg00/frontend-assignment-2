@@ -25,11 +25,14 @@ export default function MovieList() {
     s.filterCategory = event.target.value
   }
 
-  const filteredMovies = s.movies.filter(movie => movie.description.categories.includes(s.filterCategory))
-
-  const filteredMovieIds = filteredMovies.map(movie => movie.id)
-
-  const filteredScreenings = sortedScreenings.filter(screening => filteredMovieIds.includes(screening.movieId))
+  let filteredScreenings
+  if (s.filterCategory === 'All') {
+    filteredScreenings = sortedScreenings
+  } else {
+    const filteredMovies = s.movies.filter(movie => movie.description.categories.includes(s.filterCategory))
+    const filteredMovieIds = filteredMovies.map(movie => movie.id)
+    filteredScreenings = sortedScreenings.filter(screening => filteredMovieIds.includes(screening.movieId))
+  }
 
   return <>
     <div>
