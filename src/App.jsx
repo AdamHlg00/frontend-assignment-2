@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { useStates } from './utilities/states'
 import MovieList from './MovieList'
-import MovieDetail from './MovieDetail'
-import { Routes, Route } from 'react-router-dom'
+import DisplaySeats from './DisplaySeats'
+import { Routes, Route, useParams } from 'react-router-dom'
 import { kebabify } from './utilities/kebabify'
 
 export default function App() {
@@ -30,10 +30,16 @@ export default function App() {
     })()
   }, [])
 
+  function BookSeats() {
+    const { id } = useParams()
+
+    return <DisplaySeats screeningId={id} />
+  }
+
   return s.movies.length === 0 ? null : <>
     <Routes>
       <Route path='/' element={<MovieList />}></Route>
-      <Route path='/book-seats/:id' element={<MovieDetail />} />
+      <Route path='/book-seats/:id' element={<BookSeats />} />
     </Routes>
   </>
 }

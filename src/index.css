@@ -13,3 +13,52 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+body {
+  background-color: black;
+  color: white;
+}
+
+.screening-and-seats {
+  text-align: center;
+}
+
+.seats {
+  text-align: center;
+}
+
+.seats>.row {
+  display: inline-block;
+}
+
+.seats>.row>div {
+  background-color: white;
+  color: black;
+  float: right;
+  text-align: center;
+  padding-top: 5px;
+  border-top-left-radius: 25%;
+  border-top-right-radius: 25%;
+  width: 50px;
+  height: 50px;
+  margin: 3px 1px;
+  cursor: pointer;
+}
+
+.seats>.row>div.selected {
+  background-color: rgb(7, 173, 7);
+}
+
+.seats>.row>.occupied {
+  background-color: rgb(190, 36, 36);
+  cursor: not-allowed;
+}
+
+.poster-screen {
+  width: 300px;
+  object-fit: cover;
+  aspect-ratio: 20/9;
+  border: 5px solid #fff;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
