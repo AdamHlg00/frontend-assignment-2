@@ -5,7 +5,8 @@ export default function DisplaySeats({ screeningId }) {
   const s = useStates({
     screening: null,
     movie: null,
-    seats: []
+    seats: [],
+    occupiedSeats: []
   })
 
   useEffect(() => {
@@ -59,6 +60,17 @@ export default function DisplaySeats({ screeningId }) {
     if (seat.occupied) { return }
     // select if not selected, deselect if selected
     seat.selected = !seat.selected
+    if (seat.selected) {
+      s.occupiedSeats.push(seat)
+      console.log(s.occupiedSeats)
+    } else {
+      console.log('SEAT', seat)
+      console.log('OCCUPIED', s.occupiedSeats)
+      const indexToRemove = s.occupiedSeats.findIndex(occupiedSeat => occupiedSeat.id === seat.id)
+      s.occupiedSeats.splice(indexToRemove, 1)
+      console.log(indexToRemove)
+      console.log(s.occupiedSeats)
+    }
   }
 
   // Output the seats
