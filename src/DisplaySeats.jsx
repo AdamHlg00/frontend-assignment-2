@@ -1,12 +1,16 @@
 import { useEffect } from "react";
 import { useStates } from './utilities/states'
+import Button from 'react-bootstrap/Button'
+import { Form } from "react-bootstrap";
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default function DisplaySeats({ screeningId }) {
   const s = useStates({
     screening: null,
     movie: null,
     seats: [],
-    occupiedSeats: []
+    selectedSeats: [],
+    numberWarning: 'Minimum 0 and maximum 12 seats!'
   })
 
   useEffect(() => {
@@ -30,6 +34,8 @@ export default function DisplaySeats({ screeningId }) {
       let seats = await (await fetch(
         `/api/seats/?auditoriumId=${auditoriumId}&sort=seatNumber`
       )).json()
+
+      console.log('SEATS', seats)
 
       // Convert the data structure from an array of objects
       // to an array (rows) of arrays (seats in rows) of objects
@@ -61,16 +67,29 @@ export default function DisplaySeats({ screeningId }) {
     // select if not selected, deselect if selected
     seat.selected = !seat.selected
     if (seat.selected) {
-      s.occupiedSeats.push(seat)
-      console.log(s.occupiedSeats)
+      s.selectedSeats.push(seat)
     } else {
-      console.log('SEAT', seat)
-      console.log('OCCUPIED', s.occupiedSeats)
-      const indexToRemove = s.occupiedSeats.findIndex(occupiedSeat => occupiedSeat.id === seat.id)
-      s.occupiedSeats.splice(indexToRemove, 1)
-      console.log(indexToRemove)
-      console.log(s.occupiedSeats)
+      const indexToRemove = s.selectedSeats.findIndex(selectedSeat => selectedSeat.id === seat.id)
+      s.selectedSeats.splice(indexToRemove, 1)
     }
+  }
+
+  function bookingFunction() {
+    console.log('BOOKED:', s.selectedSeats)
+  }
+
+  function seatsToBookFunction(event) {
+    const number = event.target.value
+
+    if (number < 1 || number > 12) {
+      s.numberWarning = 'Minimum 0 and maximum 12 seats!'
+      return
+    } else {
+      s.numberWarning = ''
+    }
+
+    s.numberOfSeats = event.target.value
+    console.log(s.numberOfSeats)
   }
 
   // Output the seats
@@ -87,14 +106,23 @@ export default function DisplaySeats({ screeningId }) {
     <img
       className="poster-screen"
       src={'https://cinema-rest.nodehill.se' + s.movie.description.posterImage} />
-    <div className="seats" >
+    <div className="seats">
       {s.seats.map(row => <><div className="row">
         {row.map((seat) => <div className={
           (seat.selected ? 'selected' : '')
           + (seat.occupied ? 'occupied' : '')
         }
-          onClick={() => toggleSeatSelection(seat)}>{seat.seatNumber}</div>)}
+          onClick={() => { s.numberWarning === '' && toggleSeatSelection(seat) }}>{seat.seatNumber}</div>)}
       </div><br /></>)}
     </div>
+    <Button variant='warning' disabled={s.selectedSeats.length === 0} onClick={() => bookingFunction()}>Book</Button>
+
+    <Form>
+      <Form.Group className='seatForm'>
+        <Form.Label>Number of adjacent seats: </Form.Label>
+        <Form.Control type='number' min={1} max={12} placeholder='Enter number of adjacent seats you want to book' onChange={seatsToBookFunction} />
+      </Form.Group>
+    </Form>
+    {s.numberWarning && <p className='warning'>{s.numberWarning}</p>}
   </div>
 }

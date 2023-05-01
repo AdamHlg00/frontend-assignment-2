@@ -1,3 +1,6 @@
+@import 'variable-overrides';
+@import 'bootstrap/scss/bootstrap';
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -16,6 +19,7 @@
 
 body {
   color: white;
+  background-color: #242424;
 }
 
 .screening-and-seats {
@@ -53,6 +57,10 @@ body {
   cursor: not-allowed;
 }
 
+.disabled-button {
+  cursor: not-allowed;
+}
+
 .poster-screen {
   width: 300px;
   object-fit: cover;
@@ -60,4 +68,8 @@ body {
   border: 5px solid #fff;
   margin-bottom: 20px;
   border-radius: 10px;
+}
+
+.warning {
+  color: red;
 }
