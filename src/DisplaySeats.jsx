@@ -1,16 +1,21 @@
-import { useEffect } from "react";
+import { useEffect } from "react"
 import { useStates } from './utilities/states'
 import Button from 'react-bootstrap/Button'
-import { Form } from "react-bootstrap";
+import { Form } from "react-bootstrap"
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { checkAdjacentSeats } from './utilities/check-adjacent-seats'
+import { Link } from 'react-router-dom'
+import { generateBookingNumber } from './utilities/generate-booking-number'
 
 export default function DisplaySeats({ screeningId }) {
-  const s = useStates({
+
+  const s = useStates('bookingUseState', {
     screening: null,
     movie: null,
     seats: [],
-    selectedSeats: [],
-    numberWarning: 'Minimum 0 and maximum 12 seats!'
+    booking: [],
+    numberWarning: 'Minimum 0 and maximum 12 seats!',
+    typeOfBooking: 'adult'
   })
 
   useEffect(() => {
@@ -64,18 +69,29 @@ export default function DisplaySeats({ screeningId }) {
   function toggleSeatSelection(seat) {
     // Do nothing if occupied
     if (seat.occupied) { return }
-    // select if not selected, deselect if selected
-    seat.selected = !seat.selected
-    if (seat.selected) {
-      s.selectedSeats.push(seat)
-    } else {
-      const indexToRemove = s.selectedSeats.findIndex(selectedSeat => selectedSeat.id === seat.id)
-      s.selectedSeats.splice(indexToRemove, 1)
+
+    console.log('SCREENING', s.screening)
+    const bookableObject = checkAdjacentSeats(s.seats, s.numberOfSeats, seat)
+    if (bookableObject.bookable) {
+      bookableObject.selectedSeats.forEach(seat => {
+        // select if not selected, deselect if selected
+        seat.selected = !seat.selected
+        if (seat.selected) {
+          s.booking.push({ seat: seat, type: s.typeOfBooking })
+        } else {
+          let indexToRemove = s.booking.findIndex(booking => booking.seat.id === seat.id)
+          s.booking.splice(indexToRemove, 1)
+        }
+      })
     }
   }
 
   function bookingFunction() {
-    console.log('BOOKED:', s.selectedSeats)
+    s.booking.number = generateBookingNumber()
+  }
+
+  function handleBookingOption(event) {
+    s.typeOfBooking = event.target.value
   }
 
   function seatsToBookFunction(event) {
@@ -95,7 +111,7 @@ export default function DisplaySeats({ screeningId }) {
   // Output the seats
   return s.seats.length === 0 ? null : <div className="screening-and-seats">
     <h1>{s.screening.movie}</h1>
-    <h2>{new Intl.DateTimeFormat('sv-SE', {
+    <h2>{new Intl.DateTimeFormat('en-EN', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -115,7 +131,25 @@ export default function DisplaySeats({ screeningId }) {
           onClick={() => { s.numberWarning === '' && toggleSeatSelection(seat) }}>{seat.seatNumber}</div>)}
       </div><br /></>)}
     </div>
-    <Button variant='warning' disabled={s.selectedSeats.length === 0} onClick={() => bookingFunction()}>Book</Button>
+    <div>
+      <p>
+        <label>Select the leftmost seat of the group you want to book</label>
+      </p>
+      <p>
+        <label><span>Type of booking: </span>
+          <select className='bookingOption' onChange={handleBookingOption}>
+            <option value='adult'>Adult</option>
+            <option value='child'>Child</option>
+            <option value='senior'>Senior</option>
+          </select>
+        </label>
+      </p>
+      <Link to={'/receipt/' + s}>
+        <Button variant='warning' disabled={s.booking.length === 0} onClick={() => bookingFunction()}>Book</Button>
+      </Link>
+    </div>
+
+
 
     <Form>
       <Form.Group className='seatForm'>

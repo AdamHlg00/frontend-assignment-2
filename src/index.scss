@@ -48,6 +48,30 @@ body {
   cursor: pointer;
 }
 
+@media (max-width: 700px) {
+  .seats>.row>div {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 550px) {
+  .seats>.row>div {
+    font-size: 12px;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 400px) {
+  .seats>.row>div {
+    font-size: 10px;
+    width: 10px;
+    height: 25px;
+    margin: 0px;
+  }
+}
+
 .seats>.row>div.selected {
   background-color: rgb(7, 173, 7);
 }
@@ -68,6 +92,12 @@ body {
   border: 5px solid #fff;
   margin-bottom: 20px;
   border-radius: 10px;
+}
+
+@media (max-width: 400px) {
+  .poster-screen {
+    width: 200px;
+  }
 }
 
 .warning {

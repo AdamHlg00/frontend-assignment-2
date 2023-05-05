@@ -1,30 +1,28 @@
-export function checkAdjacentSeats(seats, auditorium, numberOfSeats, selectedSeat) {
+export function checkAdjacentSeats(seats, numberOfSeats, selectedSeat) {
   let bookable = false
   let seatArray = []
-  let loopVariable = 0
+  let selectedSeats = []
 
-  for (let seat of seats) {
-    if (seat.auditoriumId === auditorium && seat.rowNumber === selectedSeat.rowNumber) {
-      seatArray.push(seat)
-    }
-  }
+  const arrayIndex = seats.findIndex(array => array[0].rowNumber === selectedSeat.rowNumber)
 
-  seatArray.sort((a, b) => {
-    if (a.seatNumber < b.seatNumber) {
-      return -1
-    }
-    if (a.seatNumber > b.seatNumber) {
-      return 1
-    }
-    return 0
-  })
+  seatArray = seats[arrayIndex]
 
-  if (seatArray.length >= numberOfSeats) {
-    while (!bookable && loopVariable < seatArray.length) {
-      const chosenIndex = seatArray.findIndex((seat) => seat.seatNumber = selectedSeat.seatNumber)
-    }
+  const firstSeatInRowIndex = seatArray.length - 1
+  const selectedSeatIndex = seatArray.findIndex(seat => seat.seatNumber === selectedSeat.seatNumber)
+  const lastSeatInSelectionIndex = parseInt(selectedSeatIndex) - parseInt(numberOfSeats) + 1
+
+  if (0 <= parseInt(lastSeatInSelectionIndex)) {
     bookable = true
-  }
+    let number = selectedSeatIndex
 
-  return bookable
+    while (number >= lastSeatInSelectionIndex) {
+      selectedSeats.push(seatArray[number])
+      if (seatArray[number].occupied) {
+        bookable = false
+        break
+      }
+      number--
+    }
+  }
+  return { bookable, selectedSeats }
 }

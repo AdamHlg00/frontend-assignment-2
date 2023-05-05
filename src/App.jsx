@@ -4,6 +4,7 @@ import MovieList from './MovieList'
 import DisplaySeats from './DisplaySeats'
 import { Routes, Route, useParams } from 'react-router-dom'
 import { kebabify } from './utilities/kebabify'
+import DisplayReceipt from './DisplayReceipt'
 
 export default function App() {
   const s = useStates('main', {
@@ -36,10 +37,17 @@ export default function App() {
     return <DisplaySeats screeningId={id} />
   }
 
+  function HandleReceipt() {
+    const { booking } = useParams()
+
+    return <DisplayReceipt booking={booking} />
+  }
+
   return s.movies.length === 0 ? null : <>
     <Routes>
       <Route path='/' element={<MovieList />}></Route>
       <Route path='/book-seats/:id' element={<BookSeats />} />
+      <Route path='/receipt/:booking' element={<HandleReceipt />}></Route>
     </Routes>
   </>
 }

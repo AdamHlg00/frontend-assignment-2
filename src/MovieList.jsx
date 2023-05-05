@@ -1,5 +1,6 @@
 import { useStates } from './utilities/states'
 import { Link } from 'react-router-dom'
+import { Container, Row, Col } from 'react-bootstrap'
 
 export default function MovieList() {
   const s = useStates('main')
@@ -52,31 +53,37 @@ export default function MovieList() {
       </label>
     </div>
 
-    {filteredScreenings.map(({ id, time, movieId, slug }) => {
-      const movie = s.movies.find(({ id }) => id === movieId)
-      return (
-        <Link to={'/book-seats/' + id}>
-          <div className='screening' key={id}>
-            <h1>{new Intl.DateTimeFormat('sv-SE', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: 'numeric'
-            }).format(new Date(time))}</h1>
-            {movie && (
-              <div className='movie'>
-                <h2>{movie.title}</h2>
-                <h3>{Math.floor(movie.description.length / 60)} hours {movie.description.length % 60} minutes</h3>
+    <Container>
+      <Row>
+        {filteredScreenings.map(({ id, time, movieId, slug }) => {
+          const movie = s.movies.find(({ id }) => id === movieId)
+          return (
+            <Col xs={12} md={6} lg={4}>
+              <Link to={'/book-seats/' + id}>
+                <div className='screening' key={id}>
+                  <h1>{new Intl.DateTimeFormat('en-EN', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric'
+                  }).format(new Date(time))}</h1>
+                  {movie && (
+                    <div className='movie'>
+                      <h2>{movie.title}</h2>
+                      <h3>{Math.floor(movie.description.length / 60)} hours {movie.description.length % 60} minutes</h3>
 
-                <img src={`https://cinema-rest.nodehill.se${movie.description.posterImage}`} />
-              </div>
-            )}
-          </div>
-        </Link>
-      )
-    })}
+                      <img src={`https://cinema-rest.nodehill.se${movie.description.posterImage}`} />
+                    </div>
+                  )}
+                </div>
+              </Link>
+            </Col>
+          )
+        })}
+      </Row>
+    </Container>
   </>
 }
 
