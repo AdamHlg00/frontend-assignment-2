@@ -66,9 +66,9 @@ export default function MovieList() {
         {filteredScreenings.map(({ id, time, movieId }) => {
           const movie = s.movies.find(({ id }) => id === movieId)
           return (
-            <Col xs={12} md={6} lg={4}>
+            <Col className='screening' xs={12} md={6} lg={4}>
               <Link to={'/book-seats/' + id}>
-                <div className='screening' key={id}>
+                <div key={id}>
                   <h1>{new Intl.DateTimeFormat('en-EN', {
                     weekday: 'long',
                     year: 'numeric',

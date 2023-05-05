@@ -103,3 +103,16 @@ body {
 .warning {
   color: red;
 }
+
+a,
+a:hover,
+a:active,
+a:visited {
+  color: rgba(255, 255, 255, 0.87);
+  text-decoration: none;
+}
+
+.screening {
+  margin-top: 50px;
+  text-align: center;
+}
