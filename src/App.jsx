@@ -3,7 +3,6 @@ import { useStates } from './utilities/states'
 import MovieList from './MovieList'
 import DisplaySeats from './DisplaySeats'
 import { Routes, Route, useParams } from 'react-router-dom'
-import { kebabify } from './utilities/kebabify'
 import DisplayReceipt from './DisplayReceipt'
 
 export default function App() {
@@ -17,26 +16,28 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
+      // Gets movies from the API
       let movies = await (await fetch('/api/movies')).json()
-      for (let movie of movies) {
-        movie.slug = kebabify(movie.title)
-      }
       s.movies = movies
 
+      // Gets screenings from the API
       let screenings = await (await fetch('/api/screenings')).json()
       s.screenings = screenings
 
+      // Gets categories from the API
       let categories = await (await fetch('/api/categories')).json()
       s.categories = categories
     })()
   }, [])
 
+  // Displays the DisplaySeats module after a user clicks a screening
   function BookSeats() {
     const { id } = useParams()
 
     return <DisplaySeats screeningId={id} />
   }
 
+  // Displays the DisplayReceipt module after a user has selected seats
   function HandleReceipt() {
     const { booking } = useParams()
 

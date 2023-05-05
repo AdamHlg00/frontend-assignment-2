@@ -7,8 +7,9 @@ import { checkAdjacentSeats } from './utilities/check-adjacent-seats'
 import { Link } from 'react-router-dom'
 import { generateBookingNumber } from './utilities/generate-booking-number'
 
+// Lets a user select seats to book through a visual booking system
 export default function DisplaySeats({ screeningId }) {
-
+  // Uses a new useState
   const s = useStates('bookingUseState', {
     screening: null,
     movie: null,
@@ -40,8 +41,6 @@ export default function DisplaySeats({ screeningId }) {
         `/api/seats/?auditoriumId=${auditoriumId}&sort=seatNumber`
       )).json()
 
-      console.log('SEATS', seats)
-
       // Convert the data structure from an array of objects
       // to an array (rows) of arrays (seats in rows) of objects
       let rows = []
@@ -70,8 +69,10 @@ export default function DisplaySeats({ screeningId }) {
     // Do nothing if occupied
     if (seat.occupied) { return }
 
-    console.log('SCREENING', s.screening)
+    // Uses the checkAdjacentSeats module to see if the selection is bookable
     const bookableObject = checkAdjacentSeats(s.seats, s.numberOfSeats, seat)
+
+    // If the selection is bookable, each seat is added to an array
     if (bookableObject.bookable) {
       bookableObject.selectedSeats.forEach(seat => {
         // select if not selected, deselect if selected
@@ -79,6 +80,7 @@ export default function DisplaySeats({ screeningId }) {
         if (seat.selected) {
           s.booking.push({ seat: seat, type: s.typeOfBooking })
         } else {
+          // If the seats where already selected and are being deselected they're removed from the array
           let indexToRemove = s.booking.findIndex(booking => booking.seat.id === seat.id)
           s.booking.splice(indexToRemove, 1)
         }
@@ -86,14 +88,17 @@ export default function DisplaySeats({ screeningId }) {
     }
   }
 
+  // Uses the generateBookingNumber module to generate a booking number and adds it to the useState
   function bookingFunction() {
     s.booking.number = generateBookingNumber()
   }
 
+  // Adds the type of booking a seat is (child, senior, or adult) to the useState
   function handleBookingOption(event) {
     s.typeOfBooking = event.target.value
   }
 
+  // Takes the number of seats the user wants to book and checks if it is a viable number
   function seatsToBookFunction(event) {
     const number = event.target.value
 
@@ -105,7 +110,6 @@ export default function DisplaySeats({ screeningId }) {
     }
 
     s.numberOfSeats = event.target.value
-    console.log(s.numberOfSeats)
   }
 
   // Output the seats
@@ -136,6 +140,7 @@ export default function DisplaySeats({ screeningId }) {
         <label>Select the leftmost seat of the group you want to book</label>
       </p>
       <p>
+        {/* Lets the user choose what type of booking the seat(s) are going to be */}
         <label><span>Type of booking: </span>
           <select className='bookingOption' onChange={handleBookingOption}>
             <option value='adult'>Adult</option>
@@ -145,6 +150,7 @@ export default function DisplaySeats({ screeningId }) {
         </label>
       </p>
       <Link to={'/receipt/' + s}>
+        {/* The book button is unavailable if no seat is selected*/}
         <Button variant='warning' disabled={s.booking.length === 0} onClick={() => bookingFunction()}>Book</Button>
       </Link>
     </div>

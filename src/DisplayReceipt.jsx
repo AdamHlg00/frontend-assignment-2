@@ -1,14 +1,16 @@
 import { useStates } from './utilities/states'
 
+// Displays the receipt after booking
 export default function DisplayReceipt() {
   const s = useStates('bookingUseState')
   let totalPrice = 0
   let seats = ''
 
+  // Adds up the price based on the kinds of bookings that where booked
   s.booking.forEach(booking => {
-    // Adult: 85
-    // Seniors: 75
-    // Children: 65
+    // Adult: 85 SEK
+    // Seniors: 75 SEK
+    // Children: 65 SEK
     if (booking.type === 'adult') {
       totalPrice += 85
     } else if (booking.type === 'senior') {
@@ -17,17 +19,11 @@ export default function DisplayReceipt() {
       totalPrice += 65
     }
 
+    // Adds the seat numbers to a string
     seats += booking.seat.seatNumber + ', '
   })
 
-  console.log('PRICE', totalPrice)
-  console.log('SEATSTRING', seats)
-
-  console.log('TESTING', s.movie.title)
-  console.log('testing BOOKING', s.booking)
-  console.log('BOOKING NR', s.booking.number)
-  console.log('FOR SCIENCE', s)
-
+  // Outputs the receipt
   return <>
     <h1>RECEIPT</h1>
     <h3>{s.movie.title}</h3>

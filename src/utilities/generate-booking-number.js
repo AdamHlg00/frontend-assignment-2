@@ -1,3 +1,4 @@
+// Generates a random booking number
 export function generateBookingNumber() {
   let no = ''
   while (no.length < 3) {

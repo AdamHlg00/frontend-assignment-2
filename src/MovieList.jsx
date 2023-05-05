@@ -2,13 +2,17 @@ import { useStates } from './utilities/states'
 import { Link } from 'react-router-dom'
 import { Container, Row, Col } from 'react-bootstrap'
 
+// Displays a list of all the screenings
 export default function MovieList() {
+  // Uses the same useState as in App
   const s = useStates('main')
 
+  // When a sort option is selected it is added to the useState
   const handleSortingOption = (event) => {
     s.sorting = event.target.value
   }
 
+  // Sorts the screenings bases on the selected sort option
   const sortedScreenings = [...s.screenings].sort((a, b) => {
     const aTime = new Date(a.time)
     const bTime = new Date(b.time)
@@ -22,10 +26,12 @@ export default function MovieList() {
     return 0
   })
 
+  // When a filter category is selected it is added to the useState
   const handleFilterCategory = (event) => {
     s.filterCategory = event.target.value
   }
 
+  // Filters the screenings based on the selected filter category
   let filteredScreenings
   if (s.filterCategory === 'All') {
     filteredScreenings = sortedScreenings
@@ -35,6 +41,7 @@ export default function MovieList() {
     filteredScreenings = sortedScreenings.filter(screening => filteredMovieIds.includes(screening.movieId))
   }
 
+  // Displays the selections for sorting, filtering, and the screenings to be displayed
   return <>
     <div>
       <label><span>Sort by: </span>
@@ -53,9 +60,10 @@ export default function MovieList() {
       </label>
     </div>
 
+    {/* Uses react bootstrap grid system to have a responsive layout */}
     <Container>
       <Row>
-        {filteredScreenings.map(({ id, time, movieId, slug }) => {
+        {filteredScreenings.map(({ id, time, movieId }) => {
           const movie = s.movies.find(({ id }) => id === movieId)
           return (
             <Col xs={12} md={6} lg={4}>
